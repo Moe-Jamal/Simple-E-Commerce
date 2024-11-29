@@ -42,8 +42,8 @@
             </a>
             <span class="nav-tooltip">Home</span>
           </li>
-          <p class="text-white mb-0 admin-text">Admin</p>
-          <li class="nav-item admin-link">
+          <p class="text-white mb-0">Admin</p>
+          <li class="nav-item">
             <a href="#" class="nav-link" data-target="adminTap">
               <span class="nav-icon"><i class="fa-solid fa-plus"></i></span>
               <span class="nav-label">Add Product</span>
@@ -295,20 +295,20 @@
         <ul class="nav-list user-nav list-unstyled">
           <p class="text-white mb-0">User</p>
           <li class="nav-item">
-            <a href="#" class="nav-link login-btn">
+            <a href="#" class="nav-link admin">
               <span class="nav-icon"><i class="fa-solid fa-user"></i></span>
-              <span class="nav-label">Login</span>
+              <span class="nav-label">Admin</span>
             </a>
-            <span class="nav-tooltip">Login</span>
+            <span class="nav-tooltip">Admin</span>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link register-btn">
+            <a href="#" class="nav-link logout-btn">
               <span class="nav-icon"
-                ><i class="fa-solid fa-user-plus small"></i
+                ><i class="fa-solid fa-arrow-right-from-bracket"></i
               ></span>
-              <span class="nav-label">Register</span>
+              <span class="nav-label">Logout</span>
             </a>
-            <span class="nav-tooltip">Register</span>
+            <span class="nav-tooltip">Logout</span>
           </li>
         </ul>
       </nav>
@@ -930,7 +930,7 @@
               >E-mail<span class="text-danger">*</span></span
             >
             <input
-              id="loginEmail"
+              id="login-email"
               type="email"
               class="form-control"
               aria-label="Sizing example input"
@@ -942,16 +942,13 @@
               >Password<span class="text-danger">*</span></span
             >
             <input
-              id="loginPassword"
+              id="login-password"
               type="password"
               class="form-control"
               aria-label="Sizing example input"
               aria-describedby="Password"
             />
           </div>
-          <p id="inValidLogin" class="alert alert-danger mt-2 small d-none">
-            Invalid email or password
-          </p>
           <div class="buttons">
             <button id="login" type="button" class="btn w-100 signin-btn">
               Login
@@ -960,24 +957,16 @@
         </form>
       </div>
     </div>
-    <div class="alert-container d-none">
-      <div
-        class="login-message p-4 rounded-3 animate__animated animate__zoomIn"
-      >
-        <p>You need to log in first to access this feature.</p>
-        <div class="mt-2 pt-3 border-top border-black">
-          <button class="btn btn-outline-primary btn-sm">Login</button>
-          <button class="btn btn-outline-secondary btn-sm alert-close">
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
     <!-- Bootstrap Js file -->
     <script src=" ./js/bootstrap.bundle.min.js"></script>
     <!-- Swipper library -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- My Script file  -->
-    <script src="./js/index.js"></script>
+    <script src="./js/admin.js"></script>
+    <script>
+      if (!sessionStorage.getItem("isAdmin")) {
+        window.location.href = "index.html";
+      }
+    </script>
   </body>
 </html>

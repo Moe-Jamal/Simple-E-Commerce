@@ -11,6 +11,7 @@ function reinitializeTooltips() {
     new bootstrap.Tooltip(tooltip);
   });
 }
+// side bar control
 const sideBar = document.querySelector(".sidebar");
 const sideBarToggler = document.querySelector(".sideBar-toggle");
 const menuToggler = document.querySelector(".menu-toggle");
@@ -50,6 +51,15 @@ window.addEventListener("resize", () => {
   }
 });
 
+window.addEventListener("scroll", function () {
+  if (window.scrollY > 70 && this.window.innerWidth < 992) {
+    sideBar.style.cssText = `margin: 0 13px`;
+    sideBar.classList.remove("menu-active");
+    menuToggler.querySelector("i").classList.replace("fa-xmark", "fa-bars");
+  } else if (window.scrollY < 70 && this.window.innerWidth < 992) {
+    sideBar.style.cssText = `margin: 13px`;
+  }
+});
 // start mangment system (CRUD)
 
 const productNameInput = document.getElementById("productName");
@@ -74,7 +84,7 @@ function setAttributes(element, attributes) {
     element.setAttribute(key, attributes[key]);
   }
 }
-
+// finalPrice Calculation
 function updateTotalPrice() {
   const originalPrice = parseFloat(productPriceBeforeDiscount.value) || 0;
   const discount = parseFloat(productDiscount.value) || 0;
@@ -84,6 +94,7 @@ function updateTotalPrice() {
 productPriceBeforeDiscount.addEventListener("input", updateTotalPrice);
 productDiscount.addEventListener("input", updateTotalPrice);
 
+// Add New Product
 function addProduct() {
   if (
     validationInput(productNameInput, "inValidName") &&
@@ -109,14 +120,14 @@ function addProduct() {
 
     productList.push(product);
     createTableData(product, productList.length - 1);
-    createProductElement(product);
+    createProductElement(product, productList.length - 1);
     localStorage.setItem("productContainer", JSON.stringify(productList));
     productForm.reset();
     clearValidation();
     updateTotalPrice();
   }
 }
-
+// Create New Table row
 function createTableData(product, index) {
   const tableRow = document.createElement("tr");
   const tableContnet = [
@@ -187,32 +198,35 @@ function createTableData(product, index) {
   tableData.appendChild(tableRow);
   reinitializeTooltips();
 }
-
-function displayTableData() {
-  tableData.innerHTML = "";
-  let serachText = searchInput.value.toLowerCase();
-  const categorySearchOption = document.querySelector(
-    'input[name="searchOption"]:checked'
-  );
-  if (productList.length > 0) {
-    for (let i = 0; i < productList.length; i++) {
-      if (
-        categorySearchOption.value == "name" &&
-        productList[i].name.toLowerCase().includes(serachText)
-      ) {
-        searchInput.placeholder = "Search By Name";
-        createTableData(productList[i], i);
-      } else if (
-        categorySearchOption.value == "category" &&
-        productList[i].category.toLowerCase().includes(serachText)
-      ) {
-        searchInput.placeholder = "Search By Category";
-        createTableData(productList[i], i);
+// Display Products on refresh and Search in Products
+if (window.location.pathname.split("/").pop() === "admin.html") {
+  function displayTableData() {
+    tableData.innerHTML = "";
+    let serachText = searchInput.value.toLowerCase();
+    const categorySearchOption = document.querySelector(
+      'input[name="searchOption"]:checked'
+    );
+    if (productList.length > 0) {
+      for (let i = 0; i < productList.length; i++) {
+        if (
+          categorySearchOption.value === "name" &&
+          productList[i].name.toLowerCase().includes(serachText)
+        ) {
+          searchInput.placeholder = "Search By Name";
+          createTableData(productList[i], i);
+        } else if (
+          categorySearchOption.value === "category" &&
+          productList[i].category.toLowerCase().includes(serachText)
+        ) {
+          searchInput.placeholder = "Search By Category";
+          createTableData(productList[i], i);
+        }
       }
     }
   }
 }
 
+// Delete Table Row (Proudct)
 function deleteProduct(index) {
   productList.splice(index, 1);
   localStorage.setItem("productContainer", JSON.stringify(productList));
@@ -220,7 +234,7 @@ function deleteProduct(index) {
   displayTableData();
   displayData();
 }
-
+// Update Product Data
 function setUpdateProduct(index) {
   currentIndex = index;
   productNameInput.value = productList[index].name;
@@ -237,7 +251,6 @@ function setUpdateProduct(index) {
   updateBtn.classList.remove("d-none");
   reinitializeTooltips();
 }
-
 function updateProduct() {
   if (
     validationInput(productNameInput, "inValidName") &&
@@ -272,12 +285,12 @@ function updateProduct() {
     updateBtn.classList.add("d-none");
   }
 }
-
+// Product Input Validation
 function validationInput(input, inValidMsg) {
   const regex = {
     productName: /^[a-zA-Z][a-zA-Z0-9\s\-]{2,39}$/,
     productPrice: /^\d{2,6}(\.\d{1,2})?$/,
-    productDescription: /^[a-zA-Z0-9\s.,!@#$%&*()\-_'":;?/]{10,500}$/,
+    productDescription: /^[a-zA-Z0-9\s.,!@#$%&*()\-_'":;?/]{10,500}$/m,
     productImage: /^.*\.(jpg|jpeg|png|gif|avif|svg|webp)$/i,
   };
   const inputValue = input.value;
@@ -295,12 +308,10 @@ function validationInput(input, inValidMsg) {
     return false;
   }
 }
-
 function validDiscount() {
-  const regex = /^(\d{2,6}(\.\d{1,2})?)?$/;
-  const disccontValue = parseFloat(productDiscount.value);
+  const regex = /^\d{2,6}(\.\d{1,2})?$/;
+  const disccontValue = productDiscount.value;
   const discountMsg = document.getElementById("invalidDiscount");
-  const discountElement = document.getElementById("discountMsg");
 
   if (disccontValue === "") {
     productDiscount.classList.remove("is-invalid", "is-valid");
@@ -308,7 +319,7 @@ function validDiscount() {
     return true;
   } else if (
     regex.test(disccontValue) &&
-    disccontValue < parseFloat(productPriceBeforeDiscount.value)
+    parseFloat(disccontValue) < parseFloat(productPriceBeforeDiscount.value)
   ) {
     productDiscount.classList.add("is-valid");
     productDiscount.classList.remove("is-invalid");
@@ -328,6 +339,8 @@ function clearValidation() {
   productImage.classList.remove("is-valid");
   productDiscount.classList.remove("is-valid");
 }
+
+// Category Pages Setup
 const graphicCardData = document.querySelector(".graphic-cards #rowData");
 const processorData = document.querySelector(".processor #rowData");
 const motherBoardData = document.querySelector(".motherboard #rowData");
@@ -338,7 +351,8 @@ const onSaleData = document.querySelector(".onsale #rowData");
 const productsControl = document.querySelector(".products-control");
 const productSearchInput = document.getElementById("productSearchInput");
 
-function createProductElement(product) {
+// Create New Product at each Category
+function createProductElement(product, index) {
   const cols = document.createElement("div");
   cols.classList.add("col-md-6", "col-lg-4", "col-xl-3");
   const productCard = document.createElement("div");
@@ -347,7 +361,7 @@ function createProductElement(product) {
   const imgHolder = document.createElement("div");
   imgHolder.classList.add("img-holder", "position-relative", "overflow-hidden");
   const productImg = document.createElement("img");
-  productImg.classList.add("card-img-top", "rounded-0");
+  productImg.classList.add("card-img-top");
   productImg.alt = product.name;
   productImg.src = product.image;
   const sale = document.createElement("span");
@@ -365,6 +379,9 @@ function createProductElement(product) {
   );
   const productInfoIcon = document.createElement("i");
   productInfoIcon.classList.add("fa-solid", "fa-magnifying-glass");
+  productInfoIcon.addEventListener("click", () => {
+    productDetails(index);
+  });
   imgLayer.appendChild(productInfoIcon);
   imgHolder.append(productImg, sale, imgLayer);
 
@@ -410,8 +427,8 @@ function createProductElement(product) {
   addToFavHolder.appendChild(addToFavIcon);
 
   cartHolder.append(addToCartBtn, addToFavHolder);
-  cardText.append(productTitle, totalPrice, originalPrice, cartHolder);
-  cardBody.appendChild(cardText);
+  cardText.append(totalPrice, originalPrice, cartHolder);
+  cardBody.append(productTitle, cardText);
   productCard.append(imgHolder, cardBody);
   cols.appendChild(productCard);
 
@@ -419,15 +436,25 @@ function createProductElement(product) {
     const clonedNode = cols.cloneNode(true);
     onSaleData.appendChild(clonedNode);
     const clonedFavIcon = clonedNode.querySelector(".fav-icon");
-    clonedFavIcon.addEventListener("click", () => {
-      if (clonedFavIcon.classList.contains("fa-regular")) {
-        clonedFavIcon.classList.replace("fa-regular", "fa-solid");
-        clonedFavIcon.style.color = "red";
-      } else {
-        clonedFavIcon.classList.replace("fa-solid", "fa-regular");
-        clonedFavIcon.style.color = "#151A2D";
-      }
-    });
+    if (clonedFavIcon) {
+      clonedFavIcon.addEventListener("click", () => {
+        if (clonedFavIcon.classList.contains("fa-regular")) {
+          clonedFavIcon.classList.replace("fa-regular", "fa-solid");
+          clonedFavIcon.style.color = "red";
+        } else {
+          clonedFavIcon.classList.replace("fa-solid", "fa-regular");
+          clonedFavIcon.style.color = "#151A2D";
+        }
+      });
+    }
+    const clonedProudctInfoIcon = clonedNode.querySelector(
+      ".fa-magnifying-glass"
+    );
+    if (clonedProudctInfoIcon) {
+      clonedProudctInfoIcon.addEventListener("click", () => {
+        productDetails(index);
+      });
+    }
   }
 
   if (product.category == "Grahpic Card") {
@@ -457,7 +484,7 @@ function displayData() {
   if (productList.length > 0) {
     for (let i = 0; i < productList.length; i++) {
       if (productList[i].name.toLowerCase().includes(searchText)) {
-        createProductElement(productList[i]);
+        createProductElement(productList[i], i);
       }
     }
   }
@@ -479,7 +506,7 @@ addBtn.addEventListener("click", addProduct);
 searchOptions.forEach((option) => {
   option.addEventListener("change", displayTableData);
 });
-window.addEventListener("load", displayTableData);
+window.addEventListener("DOMContentLoaded", displayTableData);
 searchInput.addEventListener("input", displayTableData);
 updateBtn.addEventListener("click", updateProduct);
 
@@ -515,10 +542,18 @@ function sortProducts() {
 sortProductsSelection.addEventListener("change", sortProducts);
 
 // show and hide taps
-document.querySelectorAll(".sidebar .nav-link").forEach((link) => {
+document.querySelectorAll(".sidebar .primary-nav .nav-link").forEach((link) => {
   link.addEventListener("click", function (e) {
     e.preventDefault();
-
+    if (window.innerWidth <= 991) {
+      sideBar.style.height = collapsedSidebarHight;
+      menuToggler.querySelector("i").classList.replace("fa-xmark", "fa-bars");
+      sideBar.classList.remove("menu-active");
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
     document.querySelectorAll(".tab-content").forEach((content) => {
       content.classList.remove("active");
     });
@@ -537,3 +572,110 @@ document.querySelectorAll(".sidebar .nav-link").forEach((link) => {
     }
   });
 });
+
+const productInfoContainer = document.querySelector(".product-container");
+const closeBtn = document.querySelector(".product-info .close");
+
+function productDetails(index) {
+  currentIndex = index;
+  const productInfoImage = document.querySelector(
+    ".product-info .img-holder img"
+  );
+  const productInfoSale = document.querySelector(
+    ".product-info .img-holder .sale"
+  );
+  const productInfoTitle = document.querySelector(
+    ".product-info .product-details .title"
+  );
+  const productInfoDescription = document.querySelector(
+    ".product-info .product-details .product-desc"
+  );
+  const productInfoFinalPrice = document.querySelector(
+    ".product-info .final-price"
+  );
+  const productInfoOriginalPrice = document.querySelector(
+    ".product-info .original-price"
+  );
+  productInfoImage.src = productList[index].image;
+  productInfoImage.alt = productList[index].name;
+  productInfoTitle.textContent = productList[index].name;
+  productInfoDescription.textContent = productList[index].description;
+  productInfoFinalPrice.textContent = `${productList[index].finalPrice} EGP`;
+  productInfoOriginalPrice.textContent = `${productList[index].originalPrice} EGP`;
+  if (!productList[index].discount) {
+    productInfoOriginalPrice.classList.add("d-none");
+    productInfoSale.classList.add("d-none");
+  } else {
+    productInfoOriginalPrice.classList.remove("d-none");
+    productInfoSale.classList.remove("d-none");
+  }
+  productInfoContainer.classList.remove("d-none");
+}
+closeBtn.addEventListener("click", function () {
+  productInfoContainer.classList.add("d-none");
+});
+
+document.addEventListener("click", (e) => {
+  if (e.target === productInfoContainer) {
+    productInfoContainer.classList.add("d-none");
+  }
+});
+
+document.addEventListener("keyup", (e) => {
+  if (e.key === "Escape") {
+    productInfoContainer.classList.add("d-none");
+    registerContainer.classList.add("d-none");
+    loginContainer.classList.add("d-none");
+  }
+});
+// Zoom-in On Info Image
+const productInfoImgHolder = document.querySelector(
+  ".product-info .img-holder"
+);
+productInfoImgHolder.addEventListener("mousemove", (e) => {
+  productInfoImgHolder.style.setProperty("--display", "block");
+  productInfoImgHolder.style.setProperty(
+    "--url",
+    `url(.${productList[currentIndex].image})`
+  );
+  let pointer = {
+    x: (e.offsetX * 100) / productInfoImgHolder.offsetWidth,
+    y: (e.offsetY * 100) / productInfoImgHolder.offsetHeight,
+  };
+  productInfoImgHolder.style.setProperty("--zoom-x", pointer.x + "%");
+  productInfoImgHolder.style.setProperty("--zoom-y", pointer.y + "%");
+});
+
+productInfoImgHolder.addEventListener("mouseleave", () => {
+  productInfoImgHolder.style.setProperty("--display", "none");
+});
+
+// logout from page
+document.querySelector(".user").addEventListener("click", (e) => {
+  e.preventDefault();
+});
+const userName = document.querySelectorAll(".user-name");
+const logoutBtn = document.querySelector(".logout-btn");
+
+userName.forEach((name) => {
+  name.textContent = sessionStorage.getItem("User-Name");
+});
+
+logoutBtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  sessionStorage.clear();
+  window.location.href = "index.html";
+});
+
+// Remove Admin Tap
+const adminTap = document.getElementById("adminTap");
+const myLayout = document.querySelector(".layout");
+if (adminTap) {
+  myLayout.removeChild(adminTap);
+}
+const primaryNav = document.querySelector(".primary-nav");
+const adminText = document.querySelector(".admin-text");
+const adminTapBtn = document.querySelector(".admin-link");
+
+primaryNav.removeChild(adminText);
+primaryNav.removeChild(adminTapBtn);

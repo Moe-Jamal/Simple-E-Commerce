@@ -295,20 +295,20 @@
         <ul class="nav-list user-nav list-unstyled">
           <p class="text-white mb-0">User</p>
           <li class="nav-item">
-            <a href="#" class="nav-link login-btn">
+            <a href="#" class="nav-link user">
               <span class="nav-icon"><i class="fa-solid fa-user"></i></span>
-              <span class="nav-label">Login</span>
+              <span class="nav-label user-name text-capitalize"></span>
             </a>
-            <span class="nav-tooltip">Login</span>
+            <span class="nav-tooltip user-name text-capitalize"></span>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link register-btn">
+            <a href="#" class="nav-link logout-btn">
               <span class="nav-icon"
-                ><i class="fa-solid fa-user-plus small"></i
+                ><i class="fa-solid fa-arrow-right-from-bracket"></i
               ></span>
-              <span class="nav-label">Register</span>
+              <span class="nav-label">Logout</span>
             </a>
-            <span class="nav-tooltip">Register</span>
+            <span class="nav-tooltip">Logout</span>
           </li>
         </ul>
       </nav>
@@ -800,184 +800,31 @@
         </div>
       </div>
     </div>
-    <div class="register-container d-none">
+    <div class="icon-holder">
       <div
-        class="register-form p-4 rounded-3 animate__animated animate__zoomIn"
+        class="cart-icon main-color-bg text-white rounded-2 d-flex justify-content-center align-items-center"
       >
-        <div class="d-flex justify-content-end">
-          <i class="close fa-solid fa-circle-xmark fa-2x main-color"></i>
-        </div>
-        <form id="registerForm">
-          <p class="position-relative form-line mb-4 fs-5">Personal Details</p>
-          <div class="input-group mb-3">
-            <span class="input-group-text"
-              >User Name
-              <span class="text-danger">*</span>
-            </span>
-            <input
-              id="userName"
-              type="text"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="userName"
-            />
-          </div>
-          <p id="inValidUserName" class="alert alert-danger mt-2 small d-none">
-            The name must start with a letter and can include letters, spaces,
-            hyphens, and underscores. each name part must be between 3 to 19
-            letter ex: Mohamed Jamal / Mohamed-Jamal.
-          </p>
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="email"
-              >E-mail<span class="text-danger">*</span></span
-            >
-            <input
-              id="registerEmail"
-              type="email"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="email"
-            />
-          </div>
-          <p
-            id="inValidRegisterEmail"
-            class="alert alert-danger mt-2 small d-none"
-          >
-            Email must start with letter and can include letters, hyphens, and
-            underscores followed by @ and end with . + (com/net)
-            <br />
-            ex: mohamed.jamal@gmail.com
-          </p>
-          <p id="alreadyExist" class="alert alert-danger mt-2 small d-none">
-            This email is already registered. Please use a different email
-            address or log in.
-          </p>
-          <div class="input-group mb-3">
-            <span class="input-group-text"
-              >Telephone<span class="text-danger">*</span></span
-            >
-            <input
-              id="telephone"
-              type="tel"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="Telephone"
-            />
-          </div>
-          <p
-            id="inValidPhoneNumber"
-            class="alert alert-danger mt-2 small d-none"
-          >
-            Enter Valid Egyption Number
-          </p>
-          <p class="position-relative form-line mb-4 fs-5">Your Password</p>
-          <div class="input-group mb-3">
-            <span class="input-group-text"
-              >Password<span class="text-danger">*</span></span
-            >
-            <input
-              id="registerPassword"
-              type="password"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="Password"
-            />
-          </div>
-          <p id="inValidPassword" class="alert alert-danger mt-2 small d-none">
-            Password must: <br />
-            - Contain at least one lowercase letter. <br />
-            - Contain at least one uppercase letter. <br />
-            - Contain at least one digit. <br />
-            - Be 8 to 20 characters long.
-          </p>
-          <div class="input-group mb-3">
-            <span class="input-group-text"
-              >Confirm Password<span class="text-danger">*</span></span
-            >
-            <input
-              id="confirm-password"
-              type="password"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="Password"
-            />
-          </div>
-          <p
-            id="inValidConfirmPassword"
-            class="alert alert-danger mt-2 small d-none"
-          >
-            The passwords must match. Double-check both fields.
-          </p>
-          <div class="buttons">
-            <button id="signup" type="button" class="btn w-100 signup-btn">
-              Signup
-            </button>
-          </div>
-        </form>
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-num">99</span>
       </div>
-    </div>
-    <div class="login-container d-none">
-      <div class="login-form p-4 rounded-3 animate__animated animate__zoomIn">
-        <div class="d-flex justify-content-end">
-          <i class="close fa-solid fa-circle-xmark fa-2x main-color"></i>
-        </div>
-        <form>
-          <p class="position-relative form-line mb-4 fs-5">
-            Returning Customer
-          </p>
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="email"
-              >E-mail<span class="text-danger">*</span></span
-            >
-            <input
-              id="loginEmail"
-              type="email"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="email"
-            />
-          </div>
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="Password"
-              >Password<span class="text-danger">*</span></span
-            >
-            <input
-              id="loginPassword"
-              type="password"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="Password"
-            />
-          </div>
-          <p id="inValidLogin" class="alert alert-danger mt-2 small d-none">
-            Invalid email or password
-          </p>
-          <div class="buttons">
-            <button id="login" type="button" class="btn w-100 signin-btn">
-              Login
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="alert-container d-none">
       <div
-        class="login-message p-4 rounded-3 animate__animated animate__zoomIn"
+        class="wishlist-icon main-color-bg text-white rounded-2 mt-2 d-flex justify-content-center align-items-center"
       >
-        <p>You need to log in first to access this feature.</p>
-        <div class="mt-2 pt-3 border-top border-black">
-          <button class="btn btn-outline-primary btn-sm">Login</button>
-          <button class="btn btn-outline-secondary btn-sm alert-close">
-            Close
-          </button>
-        </div>
+        <i class="fa-regular fa-heart"></i>
+        <span class="whishlist-num">1</span>
       </div>
     </div>
+
     <!-- Bootstrap Js file -->
     <script src=" ./js/bootstrap.bundle.min.js"></script>
     <!-- Swipper library -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- My Script file  -->
-    <script src="./js/index.js"></script>
+    <script src="./js/user.js"></script>
+    <script>
+      if (!sessionStorage.getItem("User-Name")) {
+        window.location.href = "index.html";
+      }
+    </script>
   </body>
 </html>

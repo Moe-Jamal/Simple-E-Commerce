@@ -411,6 +411,10 @@ function createProductElement(product, index) {
   const addToCartBtn = document.createElement("button");
   addToCartBtn.classList.add("btn", "btn-sm", "py-2", "cart");
   addToCartBtn.textContent = "ADD TO CART";
+  addToCartBtn.addEventListener("click", () => {
+    addToCart(index);
+    removeCartItems();
+  });
   const addToFavHolder = document.createElement("span");
   addToFavHolder.classList.add("d-flex", "align-items-center");
   const addToFavIcon = document.createElement("i");
@@ -664,6 +668,7 @@ userName.forEach((name) => {
 logoutBtn.addEventListener("click", function (e) {
   e.preventDefault();
   sessionStorage.clear();
+  localStorage.removeItem("UserId");
   window.location.href = "index.html";
 });
 
@@ -679,3 +684,149 @@ const adminTapBtn = document.querySelector(".admin-link");
 
 primaryNav.removeChild(adminText);
 primaryNav.removeChild(adminTapBtn);
+
+// cart Control
+
+const userList = JSON.parse(localStorage.getItem("userContainer"));
+const userId = localStorage.getItem("UserId");
+const user = userList.find((user) => user.id === userId);
+const userCart = user.cart;
+const cartItems = document.querySelector(".cartItems");
+const cartItemsNums = document.querySelectorAll(".cart-num");
+
+function addToCart(index) {
+  const cartItem = {
+    image: productList[index].image,
+    name: productList[index].name,
+    finalPrice: productList[index].finalPrice,
+    numOfItem: 1,
+  };
+
+  const currentItem = userCart.find((item) => item.name === cartItem.name);
+
+  if (currentItem) {
+    currentItem.numOfItem++;
+    displayCartData();
+  } else {
+    userCart.push(cartItem);
+    createCartItemElement(cartItem, userCart.length - 1);
+    cartItemsNum();
+  }
+  localStorage.setItem("userContainer", JSON.stringify(userList));
+}
+
+function createCartItemElement(item, index) {
+  const cartItem = document.createElement("div");
+  cartItem.classList.add("item", "bg-white", "p-3", "mb-2");
+
+  const itemRow = document.createElement("div");
+  itemRow.classList.add("row");
+
+  const imgHolder = document.createElement("div");
+  imgHolder.classList.add("col-4", "d-flex", "align-items-center");
+  const productImg = document.createElement("img");
+  productImg.src = item.image;
+  productImg.alt = item.name;
+  productImg.classList.add("img-fluid");
+  imgHolder.appendChild(productImg);
+
+  const productCaption = document.createElement("div");
+  productCaption.classList.add("col-6", "p-0");
+  const productTitle = document.createElement("h4");
+  productTitle.classList.add("title", "fs-6");
+  productTitle.textContent = item.name;
+  const price = document.createElement("p");
+  price.textContent = `Price: ${item.finalPrice} EGP`;
+
+  const numsControl = document.createElement("div");
+  numsControl.classList.add("btn-group", "btn-group-sm");
+  const itemNum = document.createElement("button");
+  itemNum.classList.add("px-2");
+  itemNum.textContent = item.numOfItem;
+  const decrementBtn = document.createElement("button");
+  decrementBtn.type = "button";
+  decrementBtn.textContent = "-";
+  const incrementBtn = document.createElement("button");
+  incrementBtn.type = "button";
+  incrementBtn.textContent = "+";
+  numsControl.append(decrementBtn, itemNum, incrementBtn);
+  productCaption.append(productTitle, price, numsControl);
+
+  const productControl = document.createElement("div");
+  productControl.classList.add(
+    "col-2",
+    "d-flex",
+    "flex-column",
+    "align-items-end",
+    "justify-content-between"
+  );
+
+  const deleteBtn = document.createElement("i");
+  deleteBtn.classList.add("fa-solid", "fa-trash", "fs-5");
+  deleteBtn.style.cursor = "pointer";
+  deleteBtn.addEventListener("click", function () {
+    deleteCartItem(index);
+  });
+  const totalPrice = document.createElement("p");
+  let itemsPrice = item.finalPrice * item.numOfItem;
+  totalPrice.classList.add("total-price", "text-nowrap", "mb-0");
+  totalPrice.textContent = `${itemsPrice} EGP`;
+
+  decrementBtn.addEventListener("click", function () {
+    if (item.numOfItem > 1) {
+      item.numOfItem--;
+      itemNum.textContent = item.numOfItem;
+      itemsPrice = item.finalPrice * item.numOfItem;
+      totalPrice.textContent = `${itemsPrice} EGP`;
+      localStorage.setItem("userContainer", JSON.stringify(userList));
+    }
+  });
+
+  incrementBtn.addEventListener("click", function () {
+    item.numOfItem++;
+    itemNum.textContent = item.numOfItem;
+    itemsPrice = item.finalPrice * item.numOfItem;
+    totalPrice.textContent = `${itemsPrice} EGP`;
+    localStorage.setItem("userContainer", JSON.stringify(userList));
+  });
+
+  productControl.append(deleteBtn, totalPrice);
+  itemRow.append(imgHolder, productCaption, productControl);
+  cartItem.appendChild(itemRow);
+  cartItems.appendChild(cartItem);
+}
+
+function displayCartData() {
+  cartItems.innerHTML = "";
+  for (let i = 0; i < userCart.length; i++) {
+    createCartItemElement(userCart[i], i);
+  }
+  cartItemsNum();
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+  displayCartData();
+  removeCartItems();
+});
+
+function deleteCartItem(index) {
+  userCart.splice(index, 1);
+  localStorage.setItem("userContainer", JSON.stringify(userList));
+  displayCartData();
+  removeCartItems();
+  cartItemsNum();
+}
+
+function removeCartItems() {
+  if (cartItems.children.length < 1) {
+    cartItems.classList.remove("px-3", "pt-3", "pb-2");
+  } else {
+    cartItems.classList.add("px-3", "pt-3", "pb-2");
+  }
+}
+
+function cartItemsNum() {
+  cartItemsNums.forEach((item) => {
+    item.textContent = cartItems.children.length;
+  });
+}

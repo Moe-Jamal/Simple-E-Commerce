@@ -63,7 +63,7 @@ body {
 }
 
 .sidebar-header {
-    padding: 25px 20px;
+    padding: 20px 20px;
     position: relative;
 }
 
@@ -86,8 +86,10 @@ body {
 }
 
 .sidebar.collapsed .sidebar-header .sideBar-toggle {
-    transform: translate(-5px, 65px);
+    transform: translate(-5px, 55px);
 }
+
+
 
 .sidebar-header .toggler:hover {
     background-color: #dde4fb;
@@ -119,18 +121,18 @@ body {
     flex-direction: column;
     gap: 4px;
     padding: 0 15px;
-    transform: translateY(15px);
+    transform: translateY(10px);
     transition: 0.4s ease;
 }
 
 .sidebar-nav .nav-list.user-nav {
     position: absolute;
-    bottom: 30px;
+    bottom: 15px;
     width: 100%;
 }
 
 .sidebar.collapsed .nav-list.user-nav {
-    bottom: 60px;
+    bottom: 30px;
 }
 
 .sidebar-nav .nav-list p {
@@ -142,13 +144,18 @@ body {
 }
 
 .sidebar.collapsed .sidebar-nav .nav-list {
-    transform: translateY(65px);
+    transform: translateY(40px);
 }
+
+.sidebar.collapsed .sidebar-nav .nav-list.user-nav {
+    transform: translateY(30px);
+}
+
 
 .sidebar-nav .nav-link {
     color: #fff;
     text-decoration: none;
-    padding: 12px 15px;
+    padding: 10px 15px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -277,6 +284,12 @@ body {
         margin: 0;
     }
 
+}
+
+@media (max-height: 800px) {
+    .sidebar.collapsed .sidebar-nav .nav-list.user-nav {
+        transform: translateY(40px);
+    }
 }
 
 /* end aside bar  */
@@ -594,7 +607,9 @@ td button i {
 
 .product-info .cart-btn,
 .register-form .signup-btn,
-.login-form .signin-btn {
+.login-form .signin-btn,
+.alert-container .alert-login,
+.btn-group button {
     background-color: #151A2D;
     color: #fff;
     transition: 0.4s ease-in-out;
@@ -603,7 +618,9 @@ td button i {
 
 .product-info .cart-btn:hover,
 .register-form .signup-btn:hover,
-.login-form .signin-btn:hover {
+.login-form .signin-btn:hover,
+.alert-container .alert-login:hover,
+.btn-group button:hover {
     background-color: transparent;
     color: #151A2D;
 }
@@ -707,7 +724,8 @@ td button i {
 }
 
 .cart-num,
-.whishlist-num {
+.whishlist-num,
+.userCart-num {
     background-color: red;
     color: white;
     width: 25px;
@@ -720,6 +738,20 @@ td button i {
     position: absolute;
     left: -12.5px;
     top: -12.5px;
+}
+
+.cart-num.userCart-num {
+    left: 35px;
+    top: 45px;
+}
+
+.cartItems {
+    max-height: 600px;
+    background-color: #F8F9FA;
+}
+
+.item {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* end cart  */
@@ -738,6 +770,7 @@ td button i {
         width: 100%;
         margin: 0 16px;
     }
+
 }
 
 /* toast message  */

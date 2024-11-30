@@ -618,10 +618,6 @@ closeBtn.addEventListener("click", function () {
 document.addEventListener("click", (e) => {
   if (e.target === productInfoContainer) {
     productInfoContainer.classList.add("d-none");
-  } else if (e.target === registerContainer) {
-    registerContainer.classList.add("d-none");
-  } else if (e.target === loginContainer) {
-    loginContainer.classList.add("d-none");
   }
 });
 
@@ -655,9 +651,7 @@ productInfoImgHolder.addEventListener("mouseleave", () => {
 });
 
 // logout from page
-document.querySelector(".admin").addEventListener("click", (e) => {
-  e.preventDefault();
-});
+
 const logoutBtn = document.querySelector(".logout-btn");
 logoutBtn.addEventListener("click", function (e) {
   e.preventDefault();

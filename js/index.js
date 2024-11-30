@@ -421,13 +421,7 @@ function createProductElement(product, index) {
   const addToFavIcon = document.createElement("i");
   addToFavIcon.classList.add("fa-regular", "fa-heart", "fa-2x", "fav-icon");
   addToFavIcon.addEventListener("click", () => {
-    if (addToFavIcon.classList.contains("fa-regular")) {
-      addToFavIcon.classList.replace("fa-regular", "fa-solid");
-      addToFavIcon.style.color = "red";
-    } else {
-      addToFavIcon.classList.replace("fa-solid", "fa-regular");
-      addToFavIcon.style.color = "#151A2D";
-    }
+    alertContainer.classList.remove("d-none");
   });
   addToFavHolder.appendChild(addToFavIcon);
 
@@ -443,13 +437,7 @@ function createProductElement(product, index) {
     const clonedFavIcon = clonedNode.querySelector(".fav-icon");
     if (clonedFavIcon) {
       clonedFavIcon.addEventListener("click", () => {
-        if (clonedFavIcon.classList.contains("fa-regular")) {
-          clonedFavIcon.classList.replace("fa-regular", "fa-solid");
-          clonedFavIcon.style.color = "red";
-        } else {
-          clonedFavIcon.classList.replace("fa-solid", "fa-regular");
-          clonedFavIcon.style.color = "#151A2D";
-        }
+        alertContainer.classList.remove("d-none");
       });
     }
     const clonedProudctInfoIcon = clonedNode.querySelector(
@@ -636,6 +624,8 @@ document.addEventListener("click", (e) => {
     registerContainer.classList.add("d-none");
   } else if (e.target === loginContainer) {
     loginContainer.classList.add("d-none");
+  } else if (e.target === alertContainer) {
+    alertContainer.classList.add("d-none");
   }
 });
 
@@ -644,6 +634,7 @@ document.addEventListener("keyup", (e) => {
     productInfoContainer.classList.add("d-none");
     registerContainer.classList.add("d-none");
     loginContainer.classList.add("d-none");
+    alertContainer.classList.add("d-none");
   }
 });
 // Zoom-in On Info Image
@@ -716,7 +707,14 @@ const signupBtn = document.getElementById("signup");
 const userList = JSON.parse(localStorage.getItem("userContainer")) || [];
 const confirmPasswordInput = document.getElementById("confirm-password");
 const registerForm = document.getElementById("registerForm");
-
+function uuidv4() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
+    (
+      +c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
+    ).toString(16)
+  );
+}
 function newUser() {
   if (
     registerFormValidation(userNameInput, "inValidUserName") &&
@@ -727,10 +725,13 @@ function newUser() {
     emailValidation()
   ) {
     const user = {
+      id: uuidv4(),
       userName: userNameInput.value.trim(),
       email: registerEmailInput.value.trim(),
       telephone: telePhoneInput.value,
       password: registerPasswordInput.value,
+      wishList: [],
+      cart: [],
     };
 
     userList.push(user);
@@ -840,17 +841,20 @@ const admin = {
 };
 
 let userName;
-
+let userId;
 function loginCheck() {
   const invalidLoginMsg = document.getElementById("inValidLogin");
   let user;
   for (let i = 0; i < userList.length; i++) {
     if (
-      userList[i].email === loginEmail.value.trim() &&
-      userList[i].password === loginPassword.value.trim()
+      userList[i].email.toLowerCase() ===
+        loginEmail.value.trim().toLowerCase() &&
+      userList[i].password.toLowerCase() ===
+        loginPassword.value.trim().toLowerCase()
     ) {
       user = userList[i];
       userName = userList[i].userName;
+      userId = userList[i].id;
       break;
     }
   }
@@ -862,6 +866,7 @@ function loginCheck() {
     window.location.href = "admin.html";
   } else if (user) {
     sessionStorage.setItem("User-Name", `${userName}`);
+    localStorage.setItem("UserId", `${userId}`);
     window.location.href = "user.html";
   } else {
     invalidLoginMsg.classList.remove("d-none");
@@ -869,6 +874,14 @@ function loginCheck() {
 }
 
 signInBtn.addEventListener("click", loginCheck);
+
+// Open Login throw alret
+const alertLoginBtn = document.querySelector(".alert-login");
+
+alertLoginBtn.addEventListener("click", () => {
+  alertContainer.classList.add("d-none");
+  loginContainer.classList.remove("d-none");
+});
 
 // Remove Admin Tap
 const adminTap = document.getElementById("adminTap");

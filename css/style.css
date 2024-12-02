@@ -609,7 +609,8 @@ td button i {
 .register-form .signup-btn,
 .login-form .signin-btn,
 .alert-container .alert-login,
-.btn-group button {
+.btn-group button,
+.checkout {
     background-color: #151A2D;
     color: #fff;
     transition: 0.4s ease-in-out;
@@ -620,7 +621,8 @@ td button i {
 .register-form .signup-btn:hover,
 .login-form .signin-btn:hover,
 .alert-container .alert-login:hover,
-.btn-group button:hover {
+.btn-group button:hover,
+.checkout:hover {
     background-color: transparent;
     color: #151A2D;
 }
@@ -752,6 +754,11 @@ td button i {
 
 .item {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.shipping {
+    border-bottom: 1px dashed #151A2D;
+
 }
 
 /* end cart  */

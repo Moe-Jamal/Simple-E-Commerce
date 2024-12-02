@@ -459,6 +459,13 @@ function createProductElement(product, index) {
         productDetails(index);
       });
     }
+    const clonedAddToCartBtn = clonedNode.querySelector(".cart");
+    if (clonedAddToCartBtn) {
+      clonedAddToCartBtn.addEventListener("click", () => {
+        addToCart(index);
+        removeCartItems();
+      });
+    }
   }
 
   if (product.category == "Grahpic Card") {
@@ -707,10 +714,12 @@ function addToCart(index) {
   if (currentItem) {
     currentItem.numOfItem++;
     displayCartData();
+    updateDisplayedPrices();
   } else {
     userCart.push(cartItem);
     createCartItemElement(cartItem, userCart.length - 1);
     cartItemsNum();
+    updateDisplayedPrices();
   }
   localStorage.setItem("userContainer", JSON.stringify(userList));
 }
@@ -779,6 +788,7 @@ function createCartItemElement(item, index) {
       itemsPrice = item.finalPrice * item.numOfItem;
       totalPrice.textContent = `${itemsPrice} EGP`;
       localStorage.setItem("userContainer", JSON.stringify(userList));
+      updateDisplayedPrices();
     }
   });
 
@@ -788,6 +798,7 @@ function createCartItemElement(item, index) {
     itemsPrice = item.finalPrice * item.numOfItem;
     totalPrice.textContent = `${itemsPrice} EGP`;
     localStorage.setItem("userContainer", JSON.stringify(userList));
+    updateDisplayedPrices();
   });
 
   productControl.append(deleteBtn, totalPrice);
@@ -807,6 +818,7 @@ function displayCartData() {
 window.addEventListener("DOMContentLoaded", function () {
   displayCartData();
   removeCartItems();
+  updateDisplayedPrices();
 });
 
 function deleteCartItem(index) {
@@ -815,6 +827,7 @@ function deleteCartItem(index) {
   displayCartData();
   removeCartItems();
   cartItemsNum();
+  updateDisplayedPrices();
 }
 
 function removeCartItems() {
@@ -829,4 +842,23 @@ function cartItemsNum() {
   cartItemsNums.forEach((item) => {
     item.textContent = cartItems.children.length;
   });
+}
+
+function checkOutPrice() {
+  let result = 0;
+  const totalPrice = document.querySelectorAll(".total-price");
+  totalPrice.forEach((ele) => {
+    const numericValue = parseFloat(ele.textContent.replace(/[^\d.]/g, ""));
+    result += numericValue || 0;
+  });
+  return result;
+}
+
+const checkOutTotalPrice = document.querySelector(".checkoutprice");
+const subTotalPrice = document.querySelector(".subTotalPrice");
+
+function updateDisplayedPrices() {
+  const totalPrice = checkOutPrice();
+  checkOutTotalPrice.textContent = `${totalPrice} EGP`;
+  subTotalPrice.textContent = `${totalPrice} EGP`;
 }
